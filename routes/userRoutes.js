@@ -96,7 +96,6 @@ UserRouter.post('/login',[
    });
    //console.log("query",query);
    db.query(query,async (err,result) => {
-    console.log(result[0].password);
     if(result.length>0) {
 
       if(await bcrypt.compare(password, result[0].password))
@@ -120,6 +119,8 @@ UserRouter.post('/login',[
   }
 }
 );
+
+
 
 
 UserRouter.get('/:id',(req,res) => {

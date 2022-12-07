@@ -37,7 +37,7 @@ HostelRouter.post('/',async(req,res) => {
                 else{
                   console.log(result);
                   console.log("hostel saved");  
-                  res.status(201).json({msg: "hostel registered successfully!",  user: {_id:hostel._id,name:hostel.name,idOwner:hostel._id_owner,category:hostel.category,Address:hostel.Address,City:hostel.City,no_one_bed:hostel.no_one_bed,no_two_bed:hostel.no_two_bed,no_three_bed:hostel.no_three_bed,image_url:hostel.image_url}, errors: []})
+                  res.status(201).json({msg: "hostel registered successfully!",  hostel: {_id:hostel._id,name:hostel.name,_id_owner:hostel._id_owner,category:hostel.category,Address:hostel.Address,City:hostel.City,no_one_bed:hostel.no_one_bed,no_two_bed:hostel.no_two_bed,no_three_bed:hostel.no_three_bed,image_url:hostel.image_url}, errors: []})
                 }
 
             });
@@ -112,11 +112,13 @@ HostelRouter.put('/',(req,res) => {
  
      })
 
+     
+
 
      HostelRouter.get('/',(req,res) => {
         //console.log(req.params.id);
        // const _id = req.params.id;
-        let query = SELECT('hostel');
+        let query =" SELECT * FROM  hostel JOIN users ON hostel._id_owner = users._id"
          console.log("query",query);
          db.query(query,async (err,result) => {
           console.log("result",result);
@@ -129,7 +131,24 @@ HostelRouter.put('/',(req,res) => {
          });
         });
 
-
+        HostelRouter.get('/data/:id',(req,res) => {
+          console.log(req.params.id);
+          const _id = req.params.id;
+          let query = SELECTCON("hostel", {
+            _id,
+           });
+           console.log("query",query);
+           db.query(query,async (err,result) => {
+            console.log("result",result);
+            if(err) {res.status(400).json({msg:"hostel not registered!"});}
+            else{
+              console.log(result); 
+              res.status(201).json({msg: "hostel there",  hostel: {_id:result[0]._id,_id_owner:result[0]._id_owner,name:result[0].name,Address:result[0].Address,City:result[0].City,no_one_bed:result[0].no_one_bed,no_two_bed:result[0].no_two_bed,no_three_bed:result[0].no_three_bed,img_url:result[0].imageUrl}})
+        
+            }
+           });
+          }
+      );
 
 
 export default HostelRouter;    
