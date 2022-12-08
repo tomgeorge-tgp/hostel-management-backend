@@ -8,6 +8,7 @@ const UserRouter = Router();
 import db from "../database.js";
 import { v4 as uuidv4 } from 'uuid';
 import { SELECTCON ,SELECT } from "../query/index.js";
+import upload from "../multer.js"
 //const mysql = require('mysql2/promise');
 dotenv.config();
 
@@ -149,17 +150,17 @@ UserRouter.get('/:id',(req,res) => {
     // ])
   });
 
-UserRouter.post('/update',(req,res) => {
-
-   let name='tom';
-   
+  UserRouter.post('/update',(req,res) => {
+    
+   // const url = req.protocol + '://' + req.get('host')
+    console.log("req.body",req.body);
    const {firstName,lastName,phoneNumber,email,password,locality,district,imageUrl} =req.body;
    let user={first_name:firstName,last_name:lastName,phone_number:phoneNumber,locality:locality,district:district,image_url:imageUrl};
    let query = `update  users set ?  where email='${email}'`;
    db.query(query,[{first_name:user.first_name,last_name:user.last_name,phone_number:user.phone_number,locality:user.locality,district:user.district,image_url:user.image_url}],(err,result)=>{
      if(err) throw err;
      console.log(result);
-     res.status(202).json({msg: "user updated", errors: []})
+     res.status(202).json({msg: "user updated",user: {_id: user._id,firstName:user.first_name,lastName:user.last_name,phoneNumber:user.phone_number,email:user.email,locality:user.locality,district:user.district,imageUrl:user.image_url},errors: []})
     });
   
 
